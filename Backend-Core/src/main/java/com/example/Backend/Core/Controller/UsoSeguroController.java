@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/usos")
+@RequestMapping("/uso")
 public class UsoSeguroController {
     @Autowired
     private final UsoSeguroService usoSeguroService;

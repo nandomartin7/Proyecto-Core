@@ -32,13 +32,21 @@ public class PlanService {
         }
 
         //Validacion Perdidas Parciales
-        if (planSeguro.getValorPerdidasParciales()<=0 || (planSeguro.getValorPerdidasParciales() * 100) % 1 != 0) {
-            throw new Exception("El valor de perdidas parciales "+planSeguro.getValorPerdidasParciales()+" es incorrecto");
+        if(!planSeguro.isPerdidasParciales()){
+            planSeguro.setValorPerdidasParciales(0.00);
+        }else {
+            if (planSeguro.getValorPerdidasParciales()<0 || (planSeguro.getValorPerdidasParciales() * 100) % 1 != 0) {
+                throw new Exception("El valor de perdidas parciales "+planSeguro.getValorPerdidasParciales()+" es incorrecto");
+            }
         }
 
         //Validacion Perdidas Totales
-        if (planSeguro.getValorPerdidasTotales()<=0 || (planSeguro.getValorPerdidasTotales() * 100) % 1 != 0) {
-            throw new Exception("El valor de perdidas totales "+planSeguro.getValorPerdidasTotales()+" es incorrecto");
+        if (!planSeguro.isPerdidasTotales()){
+            planSeguro.setValorPerdidasTotales(0.00);
+        }else {
+            if (planSeguro.getValorPerdidasTotales()<0 || (planSeguro.getValorPerdidasTotales() * 100) % 1 != 0) {
+                throw new Exception("El valor de perdidas totales "+planSeguro.getValorPerdidasTotales()+" es incorrecto");
+            }
         }
 
         //Validacion Valor Plan
@@ -58,17 +66,25 @@ public class PlanService {
             }
 
             //Validacion Perdidas Parciales
-            if (existe.getValorPerdidasParciales()<=0 || (existe.getValorPerdidasParciales() * 100) % 1 != 0) {
-                throw new Exception("El valor de perdidas parciales "+existe.getValorPerdidasParciales()+" es incorrecto");
+            if(!planSeguro.isPerdidasParciales()){
+                planSeguro.setValorPerdidasParciales(0.00);
+            }else {
+                if (planSeguro.getValorPerdidasParciales()<0 || (existe.getValorPerdidasParciales() * 100) % 1 != 0) {
+                    throw new Exception("El valor de perdidas parciales "+existe.getValorPerdidasParciales()+" es incorrecto");
+                }
             }
 
             //Validacion Perdidas Totales
-            if (existe.getValorPerdidasTotales()<=0 || (existe.getValorPerdidasTotales() * 100) % 1 != 0) {
-                throw new Exception("El valor de perdidas totales "+existe.getValorPerdidasTotales()+" es incorrecto");
+            if (!planSeguro.isPerdidasTotales()){
+                planSeguro.setValorPerdidasTotales(0.00);
+            }else {
+                if (planSeguro.getValorPerdidasTotales()<0 || (existe.getValorPerdidasTotales() * 100) % 1 != 0) {
+                    throw new Exception("El valor de perdidas totales "+existe.getValorPerdidasTotales()+" es incorrecto");
+                }
             }
 
             //Validacion Valor Plan
-            if (existe.getValorPlan()<=0 || (existe.getValorPlan() * 100) % 1 != 0) {
+            if (planSeguro.getValorPlan()<=0 || (existe.getValorPlan() * 100) % 1 != 0) {
                 throw new Exception("El valor del plan "+existe.getValorPlan()+" es incorrecto");
             }
 

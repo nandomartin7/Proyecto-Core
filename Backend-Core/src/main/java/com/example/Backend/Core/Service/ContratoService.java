@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +38,13 @@ public class ContratoService {
     }
 
     public Contrato registrarContrato(Contrato contrato) throws Exception{
+        //Ajustar fecha de inicio
+        Date fechaInicioAjustada = ajustarFecha(contrato.getFechaInicio());
+        contrato.setFechaInicio(fechaInicioAjustada);
+
+        Date fechaFinalizacionAjustada = ajustarFecha(contrato.getFechaFinalizacion());
+        contrato.setFechaFinalizacion(fechaFinalizacionAjustada);
+
         //Validacion del automovil
         Automovil automovil = automovilService.findByIdAutomovil(contrato.getAutomovil().getIdAutomovil());
         if (automovil == null){
@@ -56,47 +64,47 @@ public class ContratoService {
         }
 
         //Validacion FechaFinalizacion del contrato
-        if (contrato.getFechaInicio().compareTo(contrato.getFechaFinalizacion()) >= 0){
-            throw new Exception("La fecha de Finalizacion debe ser menor");
-        }
-
-
-        //Validacion valores agregados
-        if (contrato.getValoresAgregados()<=0 || (contrato.getValoresAgregados() * 100) % 1 != 0) {
-            throw new Exception("El valor de valores agregados "+contrato.getValoresAgregados()+" es incorrecto");
-        }
-
-        //Validacion valor Subtotal
-        if (contrato.getValorsubtotal()<=0 || (contrato.getValorsubtotal() * 100) % 1 != 0) {
-            throw new Exception("El valor de subtotal "+contrato.getValorsubtotal()+" es incorrecto");
-        }
-
-        //Validacion Valor Total
-        if (contrato.getValortotal()<=0 || (contrato.getValortotal() * 100) % 1 != 0) {
-            throw new Exception("El valor total "+contrato.getValortotal()+" es incorrecto");
+        if (contrato.getFechaInicio().after(contrato.getFechaFinalizacion())){
+            throw new Exception("La fecha de Finalizacion debe ser mayor que la fecha de Inicio");
         }
 
         contrato.setAutomovil(automovil);
         contrato.setCliente(cliente);
         contrato.setPlanSeguro(plan);
+        contrato.setRenovacionContrato(false); // Si no se va a renovar, puedes definirlo como `false`
+        contrato.setFechaRenovacion(null); // Si no se necesita la fecha de renovación, asigna `null`
+        contrato.setValoresAgregados(0.0); // Asigna `0.0` si no hay valores agregados
+        contrato.setMotivoAgregados("");
+        contrato.setValorsubtotal(contrato.getPlanSeguro().getValorPlan());
+        contrato.setValortotal(contrato.getValorsubtotal());
         return contratoRepository.save(contrato);
     }
 
     public Contrato updateContrato(Long idContrato, Contrato contratoActualizar) throws Exception{
         Contrato existe = findByIdContrato(idContrato);
         if (existe != null){
-            if (existe.getFechaRenovacion().before(existe.getFechaInicio())){
-                throw new Exception("La fecha de renovacion debeser posterior a la fecha de inicio "+ existe.getFechaInicio());
-            }
+            System.out.println("Fecha de Finalizacion: " + contratoActualizar.getFechaFinalizacion());
+            System.out.println("Fecha de Renovacion: " + contratoActualizar.getFechaRenovacion());
+            
+            Date fechaRenovacionActualizada = null;
+            Date fechaFinalizacionAjustada = ajustarFecha(contratoActualizar.getFechaFinalizacion());
+            contratoActualizar.setFechaFinalizacion(fechaFinalizacionAjustada);
 
-            //Validacion FechaFinalizacion del contrato
-            if (existe.getFechaInicio().compareTo(existe.getFechaFinalizacion()) >= 0){
-                throw new Exception("La fecha de Finalizacion debe ser mayor a"+existe.getFechaInicio());
+            //Validacion Renovacion de Contrato y Fecha de renovacion
+            if (contratoActualizar.isRenovacionContrato()){
+                if(existe.getFechaRenovacion()!=null && existe.getFechaFinalizacion().equals(contratoActualizar.getFechaFinalizacion())){
+                    fechaRenovacionActualizada = existe.getFechaRenovacion();
+                    contratoActualizar.setFechaFinalizacion(existe.getFechaFinalizacion());
+                }else {
+                    fechaRenovacionActualizada = existe.getFechaFinalizacion();
+                    if (contratoActualizar.getFechaFinalizacion().before(fechaRenovacionActualizada)) {
+                        throw new Exception("la nueva fecha de finalizacion debe ser posterior a la fecha de renovacion: " + contratoActualizar.getFechaRenovacion());
+                    }
+                }
             }
-
 
             //Validacion valores agregados
-            if (existe.getValoresAgregados()<=0 || (existe.getValoresAgregados() * 100) % 1 != 0) {
+            if (existe.getValoresAgregados()<0 || (existe.getValoresAgregados() * 100) % 1 != 0) {
                 throw new Exception("El valor de valores agregados "+existe.getValoresAgregados()+" es incorrecto");
             }
 
@@ -110,6 +118,13 @@ public class ContratoService {
                 throw new Exception("El valor total "+existe.getValortotal()+" es incorrecto");
             }
 
+            Date fechaRenovacionAjustada = ajustarFecha(fechaRenovacionActualizada);
+            contratoActualizar.setFechaRenovacion(fechaRenovacionAjustada);
+
+            fechaFinalizacionAjustada = ajustarFecha(contratoActualizar.getFechaFinalizacion());
+            contratoActualizar.setFechaFinalizacion(fechaFinalizacionAjustada);
+
+            existe.setFechaFinalizacion(contratoActualizar.getFechaFinalizacion());
             existe.setRenovacionContrato(contratoActualizar.isRenovacionContrato());
             existe.setFechaRenovacion(contratoActualizar.getFechaRenovacion());
             existe.setValoresAgregados(contratoActualizar.getValoresAgregados());
@@ -150,5 +165,13 @@ public class ContratoService {
                         contrato.getFechaInicio().compareTo(fechaFinal)<=0)
                 .collect(Collectors.toList());
         return contratosEnRango;
+    }
+
+    private Date ajustarFecha(Date fechaOriginal){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fechaOriginal);
+
+        calendar.add(Calendar.HOUR_OF_DAY,5);
+        return calendar.getTime();
     }
 }

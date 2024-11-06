@@ -85,8 +85,10 @@ public class EmpleadoService {
             }
 
             //Validar correo duplicado
-            if (empleadoRepository.findByCorreo(existe.getCorreo()) != null){
-                throw new Exception("El correo ya esta registrado en otra cuenta: "+existe.getCorreo());
+            if(!existe.getCorreo().equals(empleado.getCorreo())){
+                if (empleadoRepository.findByCorreo(empleado.getCorreo()) != null){
+                    throw new Exception("El correo ya esta registrado en otra cuenta: "+existe.getCorreo());
+                }
             }
 
             existe.setNombre(empleado.getNombre());

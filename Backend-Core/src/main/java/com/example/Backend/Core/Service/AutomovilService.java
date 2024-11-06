@@ -29,7 +29,7 @@ public class AutomovilService {
 
     public Automovil registrarAutomovil (Automovil automovil) throws Exception{
         //Validacion del idAutomovil o Placa
-        if (!automovil.getIdAutomovil().matches("^[ABCUHXRLOEGIMPVNQSWYJKTZ]{1}[A-Z]{2}-\\\\d{4}$")){
+        if (!automovil.getIdAutomovil().matches("^[ABCUHXRLOEGIMPVNQSWYJKTZ]{1}[A-Z]{2}-\\d{4}$")){
             throw new Exception("La placal del automovil "+automovil.getIdAutomovil()+" no esta permitido");
         }
 
@@ -77,7 +77,7 @@ public class AutomovilService {
 
             //Validacion del tipo de automóvil
             List<String> allowedType = List.of("Automóvil", "Jeep / Caminoneta", "Deportivo");
-            if (!allowedType.contains(existe.getCiudadCirculacion())){
+            if (!allowedType.contains(existe.getTipo())){
                 throw new Exception("El tipo de automóvil "+existe.getTipo()+" no esta permitida");
             }
 

@@ -50,7 +50,7 @@ public class ClienteService {
         }
 
         //Validacion del correo
-        if (!cliente.getCorreo().matches("^[\\\\w._%+-]+@[\\\\w.-]+\\\\.[a-zA-Z]{2,6}$")){
+        if (!cliente.getCorreo().matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")){
             throw new Exception("Formato de correo electronico inválido: "+ cliente.getCorreo());
         }
 
@@ -86,8 +86,10 @@ public class ClienteService {
             }
 
             //Validar correo duplicado
-            if (clienteRepository.findByCorreo(existe.getCorreo()) != null){
-                throw new Exception("El correo ya esta registrado en otra cuenta: "+existe.getCorreo());
+            if(!existe.getCorreo().equals(cliente.getCorreo())){
+                if (clienteRepository.findByCorreo(cliente.getCorreo()) != null){
+                    throw new Exception("El correo ya esta registrado en otra cuenta: "+existe.getCorreo());
+                }
             }
 
             existe.setNombre(cliente.getNombre());

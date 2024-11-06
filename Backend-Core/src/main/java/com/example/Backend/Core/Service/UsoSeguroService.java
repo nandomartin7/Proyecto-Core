@@ -33,8 +33,8 @@ public class UsoSeguroService {
     public UsoSeguro registrarUso(UsoSeguro usoSeguro) throws Exception{
         //Validaciones de Contrato
         Contrato contrato = contratoService.findByIdContrato(usoSeguro.getContrato().getIdContrato());
-        if (contrato != null){
-            throw new Exception("El uso del seguro no esta asociado a un contrato valido");
+        if (contrato == null){
+            throw new Exception("El uso del seguro no esta asociado a un contrato existente");
         }
         if (contrato.getFechaInicio().compareTo(new Date())>0 && contrato.getFechaFinalizacion().compareTo(new Date())<0){
             throw new Exception("El contrato ya no esta vigente");
@@ -47,17 +47,12 @@ public class UsoSeguroService {
         }
 
         //Validacion Monto Aprobado
-        if (usoSeguro.getMontoAprobado() < usoSeguro.getContrato().getPlanSeguro().getValorPerdidasParciales() ||
-                usoSeguro.getMontoAprobado() < usoSeguro.getContrato().getPlanSeguro().getValorPerdidasTotales()){
-            throw new Exception("El monto sobrepasa la ccobertura del seguro");
+        if ((usoSeguro.getMontoAprobado() > usoSeguro.getContrato().getPlanSeguro().getValorPerdidasTotales()) &&
+                (usoSeguro.getMontoAprobado() > usoSeguro.getContrato().getPlanSeguro().getValorPerdidasParciales())){
+            throw new Exception("El monto sobrepasa la cobertura del seguro");
         }
 
-        //Validaciones de estado de Reclamo
-        List<String> ValidarEstado = List.of("Aprobado", "Pendiente", "Rechazado");
-        if (!ValidarEstado.contains(usoSeguro.getEstadoReclamo())){
-            throw new Exception("Estado de reclamo invalido "+usoSeguro.getEstadoReclamo());
-        }
-
+        usoSeguro.setEstadoReclamo("Pendiente");
         usoSeguro.setContrato(contrato);
         usoSeguro.setFecha(new Date());
         return usoRepository.save(usoSeguro);
@@ -69,23 +64,25 @@ public class UsoSeguroService {
             //Validacion del tipo de uso
             List<String> allowedType = List.of("Choque grave", "Choque leve", "Daño electrico", "Daño mecanico no grave", "Mantenimiento", "Auxilio mecanico");
             if (!allowedType.contains(existe.getTipoUso())){
-                throw new Exception("El tipo de uso "+existe.getTipoUso()+" no esta permitido");
+                throw new Exception("El tipo de uso "+usoActualizar.getTipoUso()+" no esta permitido");
             }
 
             //Validacion Monto Aprobado
-            if (existe.getMontoAprobado() < existe.getContrato().getPlanSeguro().getValorPerdidasParciales() ||
-                    existe.getMontoAprobado() < existe.getContrato().getPlanSeguro().getValorPerdidasTotales()){
-                throw new Exception("El monto sobrepasa la ccobertura del seguro");
+            if ((usoActualizar.getMontoAprobado() > usoActualizar.getContrato().getPlanSeguro().getValorPerdidasTotales()) &&
+                    (usoActualizar.getMontoAprobado() > usoActualizar.getContrato().getPlanSeguro().getValorPerdidasParciales())){
+                throw new Exception("El monto sobrepasa la cobertura del seguro");
             }
+
 
             //Validaciones de estado de Reclamo
             List<String> ValidarEstado = List.of("Aprobado", "Pendiente", "Rechazado");
-            if (!ValidarEstado.contains(existe.getEstadoReclamo())){
-                throw new Exception("Estado de reclamo invalido "+existe.getEstadoReclamo());
+            if (!ValidarEstado.contains(usoActualizar.getEstadoReclamo())){
+                throw new Exception("Estado de reclamo invalido "+usoActualizar.getEstadoReclamo());
             }
 
 
             existe.setTipoUso(usoActualizar.getTipoUso());
+            existe.setDescripcion(usoActualizar.getDescripcion());
             existe.setMontoAprobado(usoActualizar.getMontoAprobado());
             existe.setEstadoReclamo(usoActualizar.getEstadoReclamo());
             return usoRepository.save(existe);
