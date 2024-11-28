@@ -20,9 +20,13 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())  //Deshabilita CSRF para facilitar la API REST
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() //Permite el acceso sin autenticación a login y registro
-                        .requestMatchers("/contratos/**").permitAll()  //Protege las rutas de contrato
-                        .requestMatchers("/reporte/**").permitAll()  //Protege las rutas de reporte
+                        .requestMatchers("/admin/**").permitAll() //Permite el acceso sin autenticación a login y registro
+                        .requestMatchers("/automovil/**").permitAll()
+                        .requestMatchers("/cliente/**").permitAll()
+                        .requestMatchers("/contrato/**").permitAll()  //Protege las rutas de contrato
+                        .requestMatchers("/empleado/**").permitAll()
+                        .requestMatchers("/plan/**").permitAll()  //Protege las rutas de reporte
+                        .requestMatchers("/uso/**").permitAll()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session

@@ -28,11 +28,11 @@ export default {
   methods: {
     login() {
       // Lógica para iniciar sesión
-      axios.post('http://localhost:8080/admin/login', this.credentials)
+      axios.post('https://proyecto-core-backend-production.up.railway.app/admin/login', this.credentials)
         .then(response => {
             localStorage.setItem('token', response.data.token); // Guarda el token
             localStorage.setItem('role', 'admin'); //Guarda el rol
-            this.$router.push('/inicio-admin'); // Redirigir a la página principal
+            this.$router.push('/admin/inicio'); // Redirigir a la página principal
         })
         .catch(error => {
             if (error.response) {
@@ -62,7 +62,7 @@ body {
   margin: auto; /* Centra el contenedor horizontalmente */
   padding: 30px; /* Espacio interior del contenedor (padding) */
   border-radius: 10px; /* Bordes redondeados */
-  background-color: #00d5ff; 
+  background-color: #333; 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra del contenedor */
   text-align: center; 
 }
@@ -70,7 +70,7 @@ body {
 /* Título principal (Iniciar sesión / Registrarse) */
 h2 {
   text-align: center;  
-  color: #333333; 
+  color: white; 
   font-family: 'Arial', sans-serif; /* Fuente del texto */
   margin-bottom: 20px; 
 }

@@ -12,7 +12,7 @@
 	<artifactId>Backend-Core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Backend-Core</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Backend del Proyecto Core de Seguros de Automoviles</description>
 	<url/>
 	<licenses>
 		<license/>

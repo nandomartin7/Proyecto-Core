@@ -1,6 +1,5 @@
 <template>
   <div>
-    <H2>Administrador</H2>
     <router-view></router-view>
   </div>
 </template>

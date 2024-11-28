@@ -6,9 +6,7 @@ import com.example.Backend.Core.Repository.UsoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -119,6 +117,32 @@ public class UsoSeguroService {
             }
         }
         return usosContrato;
+    }
+
+    public Map<Integer, Map<String, List<UsoSeguro>>> findByTipoUsosFechas(Date fechaInicio, Date fechaFin) {
+        List<UsoSeguro> usosEnRango = findAll().stream()
+                .filter(usoSeguro -> usoSeguro.getFecha().compareTo(fechaInicio) >= 0 &&
+                        usoSeguro.getFecha().compareTo(fechaFin) <= 0)
+                .collect(Collectors.toList());
+
+        Map<Integer, Map<String, List<UsoSeguro>>> resultado = new HashMap<>();
+
+        Map<String, List<UsoSeguro>> agruparPorTipo = new HashMap<>();
+        for (UsoSeguro uso : usosEnRango) {
+            agruparPorTipo
+                    .computeIfAbsent(uso.getTipoUso(), k -> new ArrayList<>())
+                    .add(uso);
+        }
+
+        for (Map.Entry<String, List<UsoSeguro>> entrada : agruparPorTipo.entrySet()) {
+            String tipoUso = entrada.getKey();
+            List<UsoSeguro> usos = entrada.getValue();
+            int totalUsos = usos.size();
+
+            Map<String, List<UsoSeguro>> mapaPorTipo = resultado.computeIfAbsent(totalUsos, k -> new HashMap<>());
+            mapaPorTipo.put(tipoUso, usos);
+        }
+        return resultado;
     }
 
 }

@@ -4,12 +4,14 @@ import com.example.Backend.Core.Models.Automovil;
 import com.example.Backend.Core.Models.UsoSeguro;
 import com.example.Backend.Core.Service.UsoSeguroService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/uso")
@@ -55,12 +57,19 @@ public class UsoSeguroController {
     }
 
     @GetMapping("/filtrar/fecha")
-    public List<UsoSeguro> filtrarByFecha(@RequestParam Date fechaInicio, @RequestParam Date fechaFin){
+    public List<UsoSeguro> filtrarByFecha(@RequestParam("fechaInicio") @DateTimeFormat(pattern = "yyyy-MM-dd")  Date fechaInicio,
+                                          @RequestParam("fechaFin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin){
         return usoSeguroService.findByFechas(fechaInicio,fechaFin);
     }
 
     @GetMapping("/filtrar/contrato")
     public List<UsoSeguro> filtrarByContrato(@RequestParam Long idContrato){
         return usoSeguroService.findByContrato(idContrato);
+    }
+
+    @GetMapping("/filtrar/tipoUso")
+    public Map<Integer, Map<String,List<UsoSeguro>>> filtrarByTipoUso (@RequestParam("fechaInicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
+                                                                       @RequestParam("fechaFin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin){
+        return usoSeguroService.findByTipoUsosFechas(fechaInicio,fechaFin);
     }
 }
