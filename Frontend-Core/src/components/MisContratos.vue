@@ -121,7 +121,7 @@
         fetchContratos() {
             const cliente = JSON.parse(localStorage.getItem("cliente"));
             axios
-            .get("https://proyecto-core-backend-production.up.railway.app/contrato/filtrar/cliente", {
+            .get("http://localhost:8080/contrato/filtrar/cliente", {
                 params: { idcliente: cliente.idCliente },
             })
             .then((response) => {
@@ -136,7 +136,7 @@
         fetchUsos() {
             this.contratos.forEach((contrato) => {
             axios
-                .get("https://proyecto-core-backend-production.up.railway.app/uso/filtrar/contrato", {
+                .get("http://localhost:8080/uso/filtrar/contrato", {
                 params: { idContrato: contrato.idContrato },
                 })
                 .then((response) => {
@@ -155,7 +155,7 @@
             this.nuevoUso.contrato = contrato;
         },
         submitUso() {
-            axios.post("https://proyecto-core-backend-production.up.railway.app/uso", this.nuevoUso)
+            axios.post("http://localhost:8080/uso", this.nuevoUso)
             .then(() => {
                 alert("Solicitud de uso registrada correctamente.");
                 this.mostrarFormulario = false;

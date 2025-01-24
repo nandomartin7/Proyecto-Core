@@ -255,7 +255,7 @@
     methods: {
         //Automovil
         validarAutomovil() {
-            axios.get(`https://proyecto-core-backend-production.up.railway.app/automovil/${this.nuevoAutomovil.idAutomovil}`)
+            axios.get(`http://localhost:8080/automovil/${this.nuevoAutomovil.idAutomovil}`)
             .then((response) => {
                 if (response.data) {
                 alert("El automóvil con esta placa ya está registrado.");
@@ -277,7 +277,7 @@
         
         //Planes
         fetchPlanes() {
-            axios.get("https://proyecto-core-backend-production.up.railway.app/plan")
+            axios.get("http://localhost:8080/plan")
             .then((response) => {
                 this.planes = response.data;
             })
@@ -351,9 +351,9 @@
             }
 
 
-            axios.post('https://proyecto-core-backend-production.up.railway.app/automovil', this.nuevoAutomovil)
+            axios.post('http://localhost:8080/automovil', this.nuevoAutomovil)
             .then(() => {
-                axios.post('https://proyecto-core-backend-production.up.railway.app/contrato', this.nuevoContrato)
+                axios.post('http://localhost:8080/contrato', this.nuevoContrato)
                 .then(() => {
                     this.limpiarCampos();
                     this.$router.push('/cliente/mis-contratos');
@@ -362,7 +362,7 @@
                     console.error(error);
                     alert("Ocurrio un error al registrar el contrato, verifique los datos e intente nuevamente");
                     
-                    axios.delete(`https://proyecto-core-backend-production.up.railway.app/automovil/${this.nuevoAutomovil.idAutomovil}`)
+                    axios.delete(`http://localhost:8080/automovil/${this.nuevoAutomovil.idAutomovil}`)
                     .then(() => {
                         alert("Intente nuevamente todo el proceso de contratación por favor.")
                     })
@@ -414,7 +414,8 @@
     }
   };
   </script>
-  
+
+
   <style scoped>
     /* Encabezado */    
     .header {
@@ -689,7 +690,6 @@
             flex: 1 1 100%; /* Ocupa todo el ancho en pantallas pequeñas */
         }
     }
-
 
   </style>
   

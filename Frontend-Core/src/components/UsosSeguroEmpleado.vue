@@ -184,7 +184,7 @@ export default {
   },
   methods: {
     fetchUsos() {
-      axios.get("https://proyecto-core-backend-production.up.railway.app/uso")
+      axios.get("http://localhost:8080/uso")
       .then((response) => {
         this.usos = response.data;
       })
@@ -193,7 +193,7 @@ export default {
       });
     },
     fetchContratos(){
-      axios.get("https://proyecto-core-backend-production.up.railway.app/contrato")
+      axios.get("http://localhost:8080/contrato")
       .then((response) => {
         this.contratos = response.data;
       })
@@ -205,7 +205,7 @@ export default {
       this.usoEditando = { ...uso };
     },
     guardarCambiosUso(){
-      axios.put(`https://proyecto-core-backend-production.up.railway.app/uso/${this.usoEditando.idUso}`, this.usoEditando)
+      axios.put(`http://localhost:8080/uso/${this.usoEditando.idUso}`, this.usoEditando)
         .then(response => {
           this.fetchUsos();
           this.cancelarEdicion();
@@ -231,7 +231,7 @@ export default {
         return;
       }
       
-      axios.get("https://proyecto-core-backend-production.up.railway.app/uso/filtrar/fecha", {
+      axios.get("http://localhost:8080/uso/filtrar/fecha", {
           params: {
             fechaInicio: this.filtroFechaInicio,
             fechaFin: this.filtroFechaFin,
@@ -260,7 +260,7 @@ export default {
     filtrarPorContrato() {
       this.mensajeErrorContrato = "";
       if (this.filtroContrato) {
-        axios.get("https://proyecto-core-backend-production.up.railway.app/uso/filtrar/contrato", {
+        axios.get("http://localhost:8080/uso/filtrar/contrato", {
           params: { idContrato: this.filtroContrato },
         })
         .then((response) => {

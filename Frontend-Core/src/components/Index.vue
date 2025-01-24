@@ -28,7 +28,7 @@ export default {
   methods: {
     login() {
       // Lógica para iniciar sesión
-      axios.post('https://proyecto-core-backend-production.up.railway.app/admin/login', this.credentials)
+      axios.post('http://localhost:8080/admin/login', this.credentials)
         .then(response => {
             localStorage.setItem('token', response.data.token); // Guarda el token
             localStorage.setItem('role', 'admin'); //Guarda el rol

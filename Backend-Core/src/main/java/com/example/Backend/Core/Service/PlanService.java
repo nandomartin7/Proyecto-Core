@@ -1,5 +1,6 @@
 package com.example.Backend.Core.Service;
 
+import com.example.Backend.Core.Factory.PlanSeguroFactory;
 import com.example.Backend.Core.Models.PlanSeguro;
 import com.example.Backend.Core.Repository.PlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class PlanService {
         return planRepository.findByIdPlan(idPlan);
     }
 
-    public PlanSeguro registrarPlan(PlanSeguro planSeguro) throws Exception {
+    /*public PlanSeguro registrarPlan(PlanSeguro planSeguro) throws Exception {
         //Validacion nombre
         if (!planSeguro.getNombre().matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}$")) {
             throw new Exception("El nombre contiene caracteres no permitidos: " + planSeguro.getNombre());
@@ -54,6 +55,20 @@ public class PlanService {
             throw new Exception("El valor del plan "+planSeguro.getValorPlan()+" es incorrecto");
         }
 
+        return planRepository.save(planSeguro);
+    }*/
+
+    public PlanSeguro registrarPlan(String nombre, boolean perdidasParciales, double valorPerdidasParciales,
+                                    boolean perdidasTotales, double valorPerdidasTotales, boolean auxilioMecanico,
+                                    boolean mantenimientoVehicular, double valorPlan) throws Exception {
+        // Obtener la instancia única del factory
+        PlanSeguroFactory factory = PlanSeguroFactory.getInstance();
+
+        // Crear el plan utilizando el factory
+        PlanSeguro planSeguro = factory.createPlanSeguro(nombre, perdidasParciales, valorPerdidasParciales,
+                perdidasTotales, valorPerdidasTotales, auxilioMecanico, mantenimientoVehicular, valorPlan);
+
+        // Guardar el plan creado en la base de datos
         return planRepository.save(planSeguro);
     }
 

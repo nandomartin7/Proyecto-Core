@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Crear una instancia de Axios
 const axiosInstance = axios.create({
-    baseURL: 'https://proyecto-core-backend-production.up.railway.app/', // Cambia esto si tu backend no está en localhost
+    baseURL: 'http://localhost:8080/', // Cambia esto si tu backend no está en localhost
 });
 
 // Agregar un interceptor para incluir el token en cada solicitud

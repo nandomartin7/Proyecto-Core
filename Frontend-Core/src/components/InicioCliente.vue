@@ -76,7 +76,7 @@ export default {
   methods: {
     //Metodos la seccion del Carrusel de planes
     fetchPlanes() {
-      axios.get("https://proyecto-core-backend-production.up.railway.app/plan")
+      axios.get("http://localhost:8080/plan")
       .then((response) => {
         this.planes = response.data;
       })
@@ -105,7 +105,7 @@ export default {
       this.clienteActual = cliente;
       this.idCliente = this.clienteActual.idCliente;
 
-      axios.get("https://proyecto-core-backend-production.up.railway.app/contrato/filtrar/cliente",{
+      axios.get("http://localhost:8080/contrato/filtrar/cliente",{
         params: { idcliente: this.idCliente },
       })
       .then((response) => {

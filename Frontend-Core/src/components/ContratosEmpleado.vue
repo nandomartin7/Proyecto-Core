@@ -207,7 +207,7 @@ export default {
     },
     methods: {
         fetchAutomoviles(){
-            axios.get('https://proyecto-core-backend-production.up.railway.app/automovil')
+            axios.get('http://localhost:8080/automovil')
             .then(response => {
             this.automoviles = response.data;
             })
@@ -217,7 +217,7 @@ export default {
             })
         },
         fetchClientes(){
-            axios.get('https://proyecto-core-backend-production.up.railway.app/cliente')
+            axios.get('http://localhost:8080/cliente')
             .then(response => {
             this.clientes = response.data;
             })
@@ -227,7 +227,7 @@ export default {
             })
         },
         fetchContratos(){
-            axios.get('https://proyecto-core-backend-production.up.railway.app/contrato')
+            axios.get('http://localhost:8080/contrato')
             .then(response => {
             this.contratos = response.data;
             })
@@ -236,7 +236,7 @@ export default {
             })
         },
         fetchPlanes(){
-        axios.get('https://proyecto-core-backend-production.up.railway.app/plan')
+        axios.get('http://localhost:8080/plan')
             .then(response => {
             this.planes = response.data;
             })
@@ -269,7 +269,7 @@ export default {
             this.$router.push("/empleado/analisis-contrato");
         },
         guardarCambiosContrato() {
-            axios.put(`https://proyecto-core-backend-production.up.railway.app/contrato/${this.contratoEditando.idContrato}`, this.contratoEditando)
+            axios.put(`http://localhost:8080/contrato/${this.contratoEditando.idContrato}`, this.contratoEditando)
             .then(response => {
             this.fetchContratos();
             this.cancelarEdicion();
@@ -292,7 +292,7 @@ export default {
         buscarPorPlan() {
             this.mensajeErrorPlan = "";
             if (this.filtroPlan) {                
-                axios.get(`https://proyecto-core-backend-production.up.railway.app/contrato/filtrar/plan`, 
+                axios.get(`http://localhost:8080/contrato/filtrar/plan`, 
                 {params: { planSeguro: parseInt(this.filtroPlan)}})
                 .then((response) => {
                     this.contratosFiltradosPorPlan = response.data;
@@ -323,7 +323,7 @@ export default {
                 return;
             }
 
-            axios.get(`https://proyecto-core-backend-production.up.railway.app/contrato/filtrar/fecha`, {
+            axios.get(`http://localhost:8080/contrato/filtrar/fecha`, {
                 params: {
                     fechaInicio: this.filtroFechaInicio,
                     fechaFin: this.filtroFechaFin

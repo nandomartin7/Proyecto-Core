@@ -35,9 +35,19 @@ public class PlanSeguroController {
         return planSeguro != null ? ResponseEntity.ok(planSeguro) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<PlanSeguro> registrarPlan(@RequestBody PlanSeguro planSeguro) throws Exception{
         return new ResponseEntity<>(planService.registrarPlan(planSeguro), HttpStatus.CREATED);
+    }*/
+
+    @PostMapping
+    public ResponseEntity<PlanSeguro> registrarPlan(@RequestBody PlanSeguro planSeguro) throws Exception{
+        PlanSeguro nuevoPlan = planSeguro;
+
+        return new ResponseEntity<>(planService.registrarPlan(nuevoPlan.getNombre(),
+                nuevoPlan.isPerdidasParciales(), nuevoPlan.getValorPerdidasParciales(),
+                nuevoPlan.isPerdidasTotales(), nuevoPlan.getValorPerdidasTotales(),
+                nuevoPlan.isAuxilioMecanico(), nuevoPlan.isMantenimientoVehicular(), nuevoPlan.getValorPlan()), HttpStatus.CREATED);
     }
 
     @PutMapping("/{idPlan}")

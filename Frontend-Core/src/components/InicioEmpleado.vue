@@ -70,7 +70,7 @@ export default {
   methods: {
     //Metodos la seccion del Carrusel de planes
     fetchPlanes() {
-      axios.get("https://proyecto-core-backend-production.up.railway.app/plan")
+      axios.get("http://localhost:8080/plan")
       .then((response) => {
         this.planes = response.data;
       })
@@ -96,7 +96,7 @@ export default {
 
     //Métodos para el gráfico de contratos
     fetchContratos() {
-      axios.get("https://proyecto-core-backend-production.up.railway.app/contrato")
+      axios.get("http://localhost:8080/contrato")
       .then((response) => {
         this.contratos = response.data;
         this.renderContratosChart(); // Renderizar el gráfico después de obtener los datos
@@ -175,7 +175,7 @@ export default {
 
     //Métodos para el gráfico de Usos del Seguro 
     fetchUsos() {
-      axios.get("https://proyecto-core-backend-production.up.railway.app/uso") // Cambia por el endpoint correcto
+      axios.get("http://localhost:8080/uso") // Cambia por el endpoint correcto
       .then((response) => {
         this.usos = response.data;
         this.renderUsosChart(); // Renderizar el gráfico después de obtener los datos
